@@ -5,7 +5,8 @@ import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import Container from 'react-bootstrap/Container'
 import Card from 'react-bootstrap/Card';
-import Modal from 'react-bootstrap/Modal'
+import Modal from 'react-bootstrap/Modal';
+import axios from 'axios';
 
 class Music extends React.Component {
     constructor(props) {
@@ -29,19 +30,17 @@ class Music extends React.Component {
     }
     GetUserRole = () => {
         console.log(localStorage.getItem('currentUser'))
-        fetch(`http://localhost:2400/api/auth/eachuser`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/auth/eachuser`, 
+        {
+            user:localStorage.getItem('currentUser')
+        },
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                user:localStorage.getItem('currentUser')
-            })
         })
-        .then(res =>res.json())
-        .then(data => {
-            console.log("aaaaaaaaaaaaaaaaaaaaaaaa",data.userdata)
-            if(data.userdata.music === true){
+        .then(res => {
+            if(res.data.userdata.music === true){
                 this.setState({permission : true})
                 this.Getdata()
             }
@@ -51,19 +50,17 @@ class Music extends React.Component {
     }
     Getdata = () => {
         console.log(localStorage.getItem('currentUser'))
-        fetch(`http://localhost:2400/api/music/getuserdata`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/music/getuserdata`, 
+        {
+            user:localStorage.getItem('currentUser')
+        },
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                user:localStorage.getItem('currentUser')
-            })
         })
-        .then(res =>res.json())
-        .then(data => {
-            this.setState({musics : data.response});
-            console.log("aaaaaaaaaaaaaaaaaaaaaaaa",data.response)
+        .then(res => {
+            this.setState({musics : res.data.response});
         })
     }
 
@@ -118,19 +115,18 @@ class Music extends React.Component {
     };
 
     onCreate = (sendData) => {
-        fetch(`http://localhost:2400/api/music/create`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/music/create`, 
+        {
+            data:sendData,
+            owner:localStorage.getItem('currentUser')
+        },
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                data:sendData,
-                owner:localStorage.getItem('currentUser')
-            })
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","Your favourite music list created",'success');
             }else{
                 this.openNotification("Failure!","Sorry Create failed",'error');
@@ -141,19 +137,18 @@ class Music extends React.Component {
     }
 
     onUpdate = (sendData) => {
-        fetch(`http://localhost:2400/api/music/update`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/music/update`, 
+        {
+            data:sendData,
+            id : this.state.currentmusicid
+        },
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                data:sendData,
-                id : this.state.currentmusicid
-            })
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","Your favourite music list updated",'success');
             }else{
                 this.openNotification("Failure!","Sorry Update failed",'error');
@@ -164,19 +159,17 @@ class Music extends React.Component {
     }
 
     onDelete = (e) => {
-        console.log(e.target.parentNode.id)
-        fetch(`http://localhost:2400/api/music/delete`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/music/delete`, 
+        {
+            id : e.target.parentNode.id
+        },
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                id : e.target.parentNode.id
-            })
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","Your favourite music deleted",'success');
             }else{
                 this.openNotification("Failure!","Sorry Delete failed",'error');
