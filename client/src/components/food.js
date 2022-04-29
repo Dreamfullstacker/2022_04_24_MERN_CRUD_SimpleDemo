@@ -5,7 +5,8 @@ import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import Container from 'react-bootstrap/Container'
 import Card from 'react-bootstrap/Card';
-import Modal from 'react-bootstrap/Modal'
+import Modal from 'react-bootstrap/Modal';
+import axios from 'axios';
 
 class Food extends React.Component {
     constructor(props) {
@@ -31,19 +32,18 @@ class Food extends React.Component {
 
     GetUserRole = () => {
         console.log(localStorage.getItem('currentUser'))
-        fetch(`http://localhost:2400/api/auth/eachuser`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/auth/eachuser`,
+        {
+            user:localStorage.getItem('currentUser')
+        },
+        {
             headers: {
               "Content-Type": "application/json"
-            },
-            body:JSON.stringify({
-                user:localStorage.getItem('currentUser')
-            })
+            }
         })
-        .then(res =>res.json())
-        .then(data => {
-            console.log("aaaaaaaaaaaaaaaaaaaaaaaa",data.userdata)
-            if(data.userdata.food === true){
+        .then(res => {
+            console.log("aaaaaaaaaaaaaaaaaaaaaaaa",res.data.userdata)
+            if(res.data.userdata.food === true){
                 this.setState({permission : true})
                 this.Getdata()
             }

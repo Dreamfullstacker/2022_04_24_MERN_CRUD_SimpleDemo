@@ -31,15 +31,10 @@ class Video extends React.Component {
         this.GetUserRole()
     }
     GetUserRole = () => {
-        console.log(localStorage.getItem('currentUser'))
         axios.post(`http://localhost:2400/api/auth/eachuser`, {
-            // JSON.stringify({
                 user:localStorage.getItem('currentUser')
-            // })
         })
-        // .then(res =>res.json())
         .then(res => {
-            console.log("aaaaaaaaaaaaaaaaaaaaaaaa",res.data)
             if(res.data.userdata.video === true){
                 this.setState({permission : true})
                 this.Getdata()
@@ -49,20 +44,16 @@ class Video extends React.Component {
         })
     }
     Getdata = () => {
-        console.log(localStorage.getItem('currentUser'))
-        fetch(`http://localhost:2400/api/video/getuserdata`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/video/getuserdata`, {
+            user:localStorage.getItem('currentUser'),
             headers: {
               "Content-Type": "application/json"
-            },
-            body:JSON.stringify({
-                user:localStorage.getItem('currentUser')
-            })
+            }
+                
         })
-        .then(res =>res.json())
-        .then(data => {
-            this.setState({videos : data.response});
-            console.log("aaaaaaaaaaaaaaaaaaaaaaaa",data.response)
+        .then(res => {
+            this.setState({videos : res.data.response});
+            console.log("aaaaaaaaaaaaaaaaaaaaaaaa",res.data.response)
         })
     }
 
@@ -117,19 +108,17 @@ class Video extends React.Component {
     };
 
     onCreate = (sendData) => {
-        fetch(`http://localhost:2400/api/video/create`, {
-            method: 'POST',
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body:JSON.stringify({
-                data:sendData,
-                owner:localStorage.getItem('currentUser')
-            })
-        })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        axios.post(`http://localhost:2400/api/video/create`, 
+        {
+            data:sendData,
+            owner:localStorage.getItem('currentUser')
+        },
+        {    
+            headers:{ "Content-Type": "application/json"}
+        }
+        )
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","Your favourite video list created",'success');
             }else{
                 this.openNotification("Failure!","Sorry Create failed",'error');
@@ -140,19 +129,14 @@ class Video extends React.Component {
     }
 
     onUpdate = (sendData) => {
-        fetch(`http://localhost:2400/api/video/update`, {
-            method: 'POST',
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body:JSON.stringify({
+        axios.post(`http://localhost:2400/api/video/update`, 
+            {
                 data:sendData,
                 id : this.state.currentvideoid
-            })
-        })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+            }
+        )
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","Your favourite video list updated",'success');
             }else{
                 this.openNotification("Failure!","Sorry Update failed",'error');
@@ -164,18 +148,12 @@ class Video extends React.Component {
 
     onDelete = (e) => {
         console.log(e.target.parentNode.id)
-        fetch(`http://localhost:2400/api/video/delete`, {
-            method: 'POST',
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body:JSON.stringify({
+        axios.post(`http://localhost:2400/api/video/delete`, {
                 id : e.target.parentNode.id
-            })
-        })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+            }
+        )
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","Your favourite video deleted",'success');
             }else{
                 this.openNotification("Failure!","Sorry Delete failed",'error');
