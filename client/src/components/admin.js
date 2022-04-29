@@ -7,6 +7,7 @@ import {Tab, Tabs} from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import apiClient from "../http-common";
+import axios from 'axios';
 
 class Admin extends React.Component {
     constructor(props) {
@@ -74,19 +75,18 @@ class Admin extends React.Component {
         this.setState({users : res.data.response});
     }
     changeVideoState = (id, stateValue) =>{
-        fetch(`http://localhost:2400/api/auth/changeVideoState`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/auth/changeVideoState`, 
+        {
+            "id" : id,
+            "stateValue" : stateValue
+        },
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                "id" : id,
-                "stateValue" : stateValue
-            })
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","User's Video access role changed",'success');
             }
             else{
@@ -109,19 +109,18 @@ class Admin extends React.Component {
         this.changeMusicState(id, e.target.checked);
     }
     changeMusicState = (id, stateValue) =>{
-        fetch(`http://localhost:2400/api/auth/changeMusicState`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/auth/changeMusicState`, 
+        {
+            "id" : id,
+            "stateValue" : stateValue
+        },
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                "id" : id,
-                "stateValue" : stateValue
-            })
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","User's Music access role changed",'success');
             }
             else{
@@ -145,19 +144,19 @@ class Admin extends React.Component {
         this.changeFoodState(id, e.target.checked);
     }
     changeFoodState = (id, stateValue) =>{
-        fetch(`http://localhost:2400/api/auth/changeFoodState`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/auth/changeFoodState`, 
+        {
+            "id" : id,
+            "stateValue" : stateValue
+        },
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                "id" : id,
-                "stateValue" : stateValue
-            })
+            
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","User's Food access role changed",'success');
             }
             else{
@@ -180,18 +179,17 @@ class Admin extends React.Component {
     }
 
     deleteUser = (id) =>{
-        fetch(`http://localhost:2400/api/auth/deleteuser`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/auth/deleteuser`, 
+        {
+            "id" : id,
+        },
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                "id" : id,
-            })
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","User deleted!",'success');
             }
             else{
@@ -202,18 +200,17 @@ class Admin extends React.Component {
 
     onMusicDelete = (e) => {
         console.log(e.target.parentNode.id)
-        fetch(`http://localhost:2400/api/music/delete`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/music/delete`, 
+        {
+            id : e.target.parentNode.id
+        },
+        {
             headers: {
               "Content-Type": "application/json"
-            },
-            body:JSON.stringify({
-                id : e.target.parentNode.id
-            })
+            }
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","Your favourite music deleted",'success');
             }else{
                 this.openNotification("Failure!","Sorry Delete failed",'error');
@@ -224,18 +221,17 @@ class Admin extends React.Component {
 
     onFoodDelete = (e) => {
         console.log(e.target.parentNode.id)
-        fetch(`http://localhost:2400/api/food/delete`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/food/delete`, 
+        {
+            id : e.target.parentNode.id
+        },
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                id : e.target.parentNode.id
-            })
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","Your favourite food deleted",'success');
             }else{
                 this.openNotification("Failure!","Sorry Delete failed",'error');
@@ -246,18 +242,17 @@ class Admin extends React.Component {
 
     onVideoDelete = (e) => {
         console.log(e.target.parentNode.id)
-        fetch(`http://localhost:2400/api/video/delete`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/video/delete`, 
+        {
+            id : e.target.parentNode.id
+        },
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                id : e.target.parentNode.id
-            })
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","Your favourite video deleted",'success');
             }else{
                 this.openNotification("Failure!","Sorry Delete failed",'error');
