@@ -5,6 +5,7 @@ import {Tab, Tabs} from 'react-bootstrap';
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import Container from 'react-bootstrap/Container'
+import axios from 'axios';
 class Home extends React.Component {
     constructor(props) {
         super(props);
@@ -22,23 +23,21 @@ class Home extends React.Component {
 
     GetUserdata = () => {
         console.log(localStorage.getItem('currentUser'))
-        fetch(`http://localhost:2400/api/auth/eachuser`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/auth/eachuser`, 
+        {
+            user:localStorage.getItem('currentUser')
+        },
+        {
             headers: {
               "Content-Type": "application/json",
               "authorization" : "bearer my-token-secret"
             },
-            body:JSON.stringify({
-                user:localStorage.getItem('currentUser')
-            })
         })
-        .then(res =>res.json())
-        .then(data => {
-            console.log(data)
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","Update your profils please",'success');
                 this.setState({
-                    Userdata : data.userdata
+                    Userdata : res.data.userdata
                 })
             }else{
                 this.openNotification("Failure!","Sorry Get your data failed",'error');
@@ -46,20 +45,18 @@ class Home extends React.Component {
         })
     }
     UpdateUser = (sendData) => {
-        fetch(`http://localhost:2400/api/auth/updateuser`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/auth/updateuser`, 
+        {
+            user:localStorage.getItem('currentUser'),
+            userdata : sendData
+        },
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                user:localStorage.getItem('currentUser'),
-                userdata : sendData
-            })
         })
-        .then(res =>res.json())
-        .then(data => {
-            console.log(data)
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","Update your profils please",'success');
             }else{
                 this.openNotification("Failure!","Sorry Get your data failed",'error');
