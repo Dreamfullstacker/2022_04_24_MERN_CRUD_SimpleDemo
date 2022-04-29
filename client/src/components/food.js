@@ -53,19 +53,19 @@ class Food extends React.Component {
     }
     Getdata = () => {
         console.log(localStorage.getItem('currentUser'))
-        fetch(`http://localhost:2400/api/food/getuserdata`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/food/getuserdata`,
+        {
+            user:localStorage.getItem('currentUser')
+        },
+        {
             headers: {
               "Content-Type": "application/json"
-            },
-            body:JSON.stringify({
-                user:localStorage.getItem('currentUser')
-            })
+            }
+            
         })
-        .then(res =>res.json())
-        .then(data => {
-            this.setState({foods : data.response});
-            console.log("aaaaaaaaaaaaaaaaaaaaaaaa",data.response)
+        .then(res => {
+            this.setState({foods : res.data.response});
+            console.log("aaaaaaaaaaaaaaaaaaaaaaaa",res.data.response)
         })
     }
 
@@ -120,19 +120,19 @@ class Food extends React.Component {
     };
 
     onCreate = (sendData) => {
-        fetch(`http://localhost:2400/api/food/create`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/food/create`, 
+        {
+            data:sendData,
+            owner:localStorage.getItem('currentUser')
+        },
+        {
             headers: {
               "Content-Type": "application/json"
-            },
-            body:JSON.stringify({
-                data:sendData,
-                owner:localStorage.getItem('currentUser')
-            })
+            }
+            
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","Your favourite food list created",'success');
             }else{
                 this.openNotification("Failure!","Sorry Create failed",'error');
@@ -143,19 +143,19 @@ class Food extends React.Component {
     }
 
     onUpdate = (sendData) => {
-        fetch(`http://localhost:2400/api/food/update`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/food/update`, 
+        {
+            data:sendData,
+            id : this.state.currentfoodid
+        },
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                data:sendData,
-                id : this.state.currentfoodid
-            })
+            
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","Your favourite food list updated",'success');
             }else{
                 this.openNotification("Failure!","Sorry Update failed",'error');
@@ -167,18 +167,18 @@ class Food extends React.Component {
 
     onDelete = (e) => {
         console.log(e.target.parentNode.id)
-        fetch(`http://localhost:2400/api/food/delete`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/food/delete`, 
+        {
+            id : e.target.parentNode.id
+        },
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                id : e.target.parentNode.id
-            })
+            
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","Your favourite food deleted",'success');
             }else{
                 this.openNotification("Failure!","Sorry Delete failed",'error');
