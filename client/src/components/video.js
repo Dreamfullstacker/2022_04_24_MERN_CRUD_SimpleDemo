@@ -5,7 +5,9 @@ import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import Container from 'react-bootstrap/Container'
 import Card from 'react-bootstrap/Card';
-import Modal from 'react-bootstrap/Modal'
+import Modal from 'react-bootstrap/Modal';
+import axios from 'axios';
+
 
 class Video extends React.Component {
     constructor(props) {
@@ -30,19 +32,15 @@ class Video extends React.Component {
     }
     GetUserRole = () => {
         console.log(localStorage.getItem('currentUser'))
-        fetch(`http://localhost:2400/api/auth/eachuser`, {
-            method: 'POST',
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body:JSON.stringify({
+        axios.post(`http://localhost:2400/api/auth/eachuser`, {
+            // JSON.stringify({
                 user:localStorage.getItem('currentUser')
-            })
+            // })
         })
-        .then(res =>res.json())
-        .then(data => {
-            console.log("aaaaaaaaaaaaaaaaaaaaaaaa",data.userdata)
-            if(data.userdata.video === true){
+        // .then(res =>res.json())
+        .then(res => {
+            console.log("aaaaaaaaaaaaaaaaaaaaaaaa",res.data)
+            if(res.data.userdata.video === true){
                 this.setState({permission : true})
                 this.Getdata()
             }

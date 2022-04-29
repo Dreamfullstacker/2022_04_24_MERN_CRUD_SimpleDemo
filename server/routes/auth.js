@@ -11,7 +11,7 @@ router.post('/deleteuser', middleware.verify, auth.deleteUser);
 router.post('/changeVideoState', middleware.verify, auth.changeVideoState);
 router.post('/changeMusicState', middleware.verify, auth.changeMusicState);
 router.post('/changeFoodState', middleware.verify, auth.changeFoodState);
-router.post('/eachuser', middleware.verify, auth.eachuser);
+router.post('/eachuser', auth.eachuser);
 router.post('/updateuser', middleware.verify, auth.updateUser);
 router.get('/getusers' , middleware.verify, auth.getusers)
 

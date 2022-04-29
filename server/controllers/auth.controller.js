@@ -142,11 +142,12 @@ exports.eachuser = (req, res) => {
         res.status(400).send({ message: "Content can not be empty!" });
         return;
     }
-
     Users.findById(req.body.user, function (err, adventure) {
         if(err){
+            console.log(err)
             res.send(err);
         }else{
+            console.log(adventure)
             if(adventure){
                 res.send({
                     response:'success',

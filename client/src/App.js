@@ -7,6 +7,7 @@ import Video from './components/video'
 import Music from './components/music'
 import Food from './components/food'
 import './App.css';
+import reportWebVitals from './reportWebVitals';
 
 class App extends React.Component {
 
@@ -14,7 +15,7 @@ class App extends React.Component {
     let navigate= useNavigate();
     navigate("main");
   }
-
+  init = ()=>{reportWebVitals();}
   render(){
     return (
       <div className="App">

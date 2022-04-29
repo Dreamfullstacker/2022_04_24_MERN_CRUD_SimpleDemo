@@ -25,7 +25,8 @@ class Home extends React.Component {
         fetch(`http://localhost:2400/api/auth/eachuser`, {
             method: 'POST',
             headers: {
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
+              "authorization" : "bearer my-token-secret"
             },
             body:JSON.stringify({
                 user:localStorage.getItem('currentUser')

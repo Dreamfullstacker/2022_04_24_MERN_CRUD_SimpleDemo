@@ -27,7 +27,12 @@ class Admin extends React.Component {
     }
 
     async GetUserData () {
-        let res = await apiClient.get("/auth/getusers")
+        let res = await apiClient.get("/auth/getusers",{
+            headers: {
+                "Content-Type": "application/json",
+                "authorization" : "bearer my-token-secret"
+              },
+        })
         console.log(res.data.response)
         this.setState({users : res.data.response});
     }
