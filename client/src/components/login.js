@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {Form, Button, Input, Checkbox, notification} from 'antd';
 import {Tab, Tabs} from 'react-bootstrap';
+import axios from 'axios';
 import './style.css'
 
 class Login extends React.Component {
@@ -10,22 +11,21 @@ class Login extends React.Component {
         localStorage.setItem('currentUser','null');
     }
     onLogin = (sendData) => {
-        fetch(`http://localhost:2400/api/auth/logins`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/auth/logins`, 
+        {data:sendData},
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({data:sendData})
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='admin'){
+        .then(res => {
+            if(res.data.response==='admin'){
                 this.openNotification("Success!","Welcone Admin",'success');
                 this.props.navigate111("/admin");
             }
-            else if(data.response==='success'){
+            else if(res.data.response==='success'){
                 this.openNotification("Success!","W E L C O M E !",'success');
-                localStorage.setItem('currentUser',data.username);
+                localStorage.setItem('currentUser',res.data.username);
                 this.props.navigate111("/main");
             }else{
                 this.openNotification("Failure!","You aren't registered!",'error');
@@ -33,20 +33,19 @@ class Login extends React.Component {
         })
     }
     onRegister = (sendData) => {
-        fetch(`http://localhost:2400/api/auth/register`, {
-            method: 'POST',
+        axios.post(`http://localhost:2400/api/auth/register`, 
+        {data:sendData},
+        {
             headers: {
               "Content-Type": "application/json"
             },
-            body:JSON.stringify({data:sendData})
         })
-        .then(res =>res.json())
-        .then(data => {
-            if(data.response==='success'){
+        .then(res => {
+            if(res.data.response==='success'){
                 this.openNotification("Success!","You are registered",'success');
                 this.props.navigate111("/");
             }
-            else if(data.response==='sameuserexist'){
+            else if(res.data.response==='sameuserexist'){
                 this.openNotification("Failure!","Same user already exist",'error');
                 this.props.navigate111("/");
             }
